@@ -28,34 +28,26 @@ public class Tank {
         this.scale = 3.0f;
     }
 
-    public void update(float dt, BotTank botTank) {
+    public void update(float dt) {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             angle -= 90.0f * dt;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             angle += 90.0f * dt;
         }
-
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+//            angle -= 90.0f;
+//        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+//            angle += 90.0f;
+//        }
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-
             x += speed * MathUtils.cosDeg(angle) * dt;
-            if (x < 60) x = 60;
-            if (x > 1220) x = 1220;
             y += speed * MathUtils.sinDeg(angle) * dt;
-            if (y < 60) y = 60;
-            if (y > 660) y = 660;
-
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-
-
-            // Ограничение зоны для танка
             x -= speed * MathUtils.cosDeg(angle) * dt * 0.2f;
-            if (x < 60) x = 60;
-            if (x > 1220) x = 1220;
             y -= speed * MathUtils.sinDeg(angle) * dt * 0.2f;
-            if (y < 60) y = 60;
-            if (y > 660) y = 660;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
             angleWeapon -= 90.0f * dt;
@@ -64,18 +56,11 @@ public class Tank {
             angleWeapon += 90.0f * dt;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !projectile.isActive()) {
-            projectile.shoot(x + 16 * scale * MathUtils.cosDeg(angle), y + 16 * scale * MathUtils.sinDeg(angle), angle + angleWeapon);
+            projectile.shoot(x + 16 * scale * MathUtils.cosDeg(angle), y + 16* scale * MathUtils.sinDeg(angle), angle + angleWeapon);
         }
         if (projectile.isActive()) {
-            projectile.update(dt, botTank);
+            projectile.update(dt);
         }
-
-        // антистолкновение с Ботом - релокация на стартовые координаты. Можно здоровье танку прикрутить =)
-        if (x > botTank.getX() - 120 && y > botTank.getY() - 120 && x < botTank.getX() + 120 && y < botTank.getY() + 120) {
-            this.x = 100;
-            this.y = 100;
-        }
-
     }
 
     public void render(SpriteBatch batch) {
