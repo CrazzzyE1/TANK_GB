@@ -12,6 +12,7 @@ public class Projectile {
     private float vy;
     private float speed;
     private boolean active;
+    private int damage;
 
     public boolean isActive() {
         return active;
@@ -24,6 +25,7 @@ public class Projectile {
     public Projectile() {
         this.texture = new Texture("projectile.png");
         this.speed = 600.0f;
+        this.damage = 100;
     }
 
     public void shoot(float x, float y, float angle) {
@@ -34,9 +36,13 @@ public class Projectile {
         this.active = true;
     }
 
-    public void update(float dt) {
+    public void update(float dt, BotTank botTank) {
         x += vx * dt;
         y += vy * dt;
+        if(x > botTank.getX() - 60 && y > botTank.getY() - 60 && x < botTank.getX() + 60 && y < botTank.getY() + 60){
+            botTank.damage(damage);
+            deactivate();
+        }
         if (x < 0 || x > 1280 || y < 0 || y > 720) {
             deactivate();
         }
